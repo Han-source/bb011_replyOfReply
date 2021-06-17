@@ -16,7 +16,7 @@ var dateFormatService = (function() {
 		//초로 먼저 먼저 환산하기
 		var gapInSec = gapInMilliSec / 1000; 
 		if(gapInSec < 60)
-			return [Math.ceil(gatInSec), '초 전'].join('');
+			return [Math.ceil(gapInSec), '초 전'].join('');
 			
 		var gapInMin = gapInSec / 60;
 		if(gapInMin < 60)

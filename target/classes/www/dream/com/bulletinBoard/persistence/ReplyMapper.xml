@@ -149,19 +149,29 @@
    
    <!--############################## 댓글 처리 함수 정의 영역 ######################### -->
  
+	<!--public int getAllReplyCount(@Param("replyId") String replyId,  @Param("idLength") int idLength); -->
+    <select id="getAllReplyCount" resultType="_int">
+        select count(*)
+       from s_reply
+	    where id like #{replyId} || '%'
+	     and length(id) >= #{idLength}
+   </select>
+ 	
+
+ 	
    <sql id="replyCommon">
 	     from s_reply
 	    where id like #{originalId} || '%'
 	     and length(id) = #{idLength}
    </sql>
    
-	<!-- 	public int getReplyCount(@Param("originalId") String originalId, 
+   
+   <!--  public int getReplyCount(@Param("originalId") String originalId, 
 			@Param("idLength") int idLength); -->
-    <select id="getReplyCount" resultType="_int">
+   <select id="getReplyCount" resultType="_int">
         select count(*)
-       <include refid="replyCommon"></include>
+      <include refid="replyCommon"></include>
    </select>
-
    <!--public List<ReplyVO> getReplyListWithPaging(@Param("originalId") String originalId, 
          @Param("idLength") int idLength,   @Param("cri") Criteria cri); -->
  

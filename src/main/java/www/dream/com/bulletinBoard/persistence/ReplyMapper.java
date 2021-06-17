@@ -36,6 +36,7 @@ public interface ReplyMapper {
 	public int deleteReplyById(String id);
 	
 	/**------------댓글 처리 함수 정의 영역--------------*/
+	
 	public int getReplyCount(@Param("originalId") String originalId, 
 			@Param("idLength") int idLength);
 	
@@ -46,5 +47,6 @@ public interface ReplyMapper {
 	/** id 값으로 Post객체 조회*/
 	public int insertReply(@Param("originalId") String originalId, @Param("reply") ReplyVO reply);
 	/** 댓글 수정처리 */
-	 public int updateReply( ReplyVO reply);
+	public int updateReply(ReplyVO reply);
+	public int getAllReplyCount(@Param("replyId") String replyId,  @Param("idLength") int idLength);
 }

@@ -17,6 +17,11 @@ public class ReplyService {
 	// lrcud
 	@Autowired
 	private ReplyMapper replyMapper;
+	
+	public int getCountOfReply(String replyId) {
+		int idLength = replyId.length() + ReplyVO.ID_LENGTH;
+		return replyMapper.getAllReplyCount(replyId, idLength);
+	}
 	//Criteira : 개수정보와  List<ReplyVO> :해당 댓글 목록정보
 	public ComparablePair<Criteria, List<ReplyVO>> getReplyListWithPaging(String originalId, Criteria cri) {
 		int idLength = originalId.length() + ReplyVO.ID_LENGTH;
@@ -29,14 +34,9 @@ public class ReplyService {
 		int idLength = replyId.length() + ReplyVO.ID_LENGTH;
 		List<ReplyVO> justRead = replyMapper.getReplyListOfReply(replyId, idLength);
 		
-		Map<String, ReplyVO> map = new HashMap<>();
-		for(ReplyVO reply : justRead) {
-			map.put(reply.getId(), reply);
-			if(map.containsKey(reply.getOriginalId())) {
-				map.get(reply.getOriginalId()).getListReply().add(reply);
-			}
-		}
-		return null;
+		
+		return ReplyVO.buildCompositeHierarchy(justRead);
+		//return justRead;
 	}
 				
 	/** id 값으로 Post 및 Reply of Reply 객체 조회 */
@@ -55,4 +55,6 @@ public class ReplyService {
 	public int deleteReplyById(String id) {
 		return replyMapper.deleteReplyById(id);
 	}
+
+
 }

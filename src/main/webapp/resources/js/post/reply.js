@@ -10,6 +10,24 @@ console.log("reply.js 연동 성공");
 
 var replyService = (function() {
 
+	
+	function getCountOfReply(replyId, successCallBack, errorCallBack){
+		$.getJSON(
+			"/replies/count/" + replyId,
+			function(cnt) {
+				if (successCallBack) {
+					successCallBack(cnt);
+				}
+			}
+		).fail(
+			function(xhr, status, errMsg) {
+				if (errorCallBack) {
+					errorCallBack(errMsg);
+				}
+			}
+		);	
+	}
+
 	function getList(orgIdAndPage, successCallBack, errorCallBack) {
 		//https://api.jquery.com/jquery.getjson/
 		var page = orgIdAndPage.page || 1;
@@ -124,11 +142,12 @@ var replyService = (function() {
 	}
 
 	return {
-		getReplyList:getList,
-		getReplyListOfReply:getListOfReply,
-		getReply:get,
-		addReply:add,
-		updateReply:update,
-		removeReply:remove
+		getAllReplyCountOfReply : getCountOfReply, 
+		getReplyList : getList,
+		getReplyListOfReply : getListOfReply,
+		getReply : get,
+		addReply : add,
+		updateReply : update,
+		removeReply : remove
 	};
 })();

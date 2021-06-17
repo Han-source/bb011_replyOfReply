@@ -1,5 +1,6 @@
 package www.dream.com.bulletinBoard.control;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,14 @@ public class ReplyController {
 	 * @param id
 	 * @return
 	 */
+	
+	@GetMapping(value = "count/{replyId}")
+	public ResponseEntity<Integer> getCountOfReply(@PathVariable ("replyId") String replyId) {
+		
+		return new ResponseEntity<>(replyService.getCountOfReply(replyId), HttpStatus.OK);
+	}
+	
+	
 	@GetMapping(value = "pages/{originalId}/{page}")
 	public ResponseEntity<ComparablePair<Criteria, List<ReplyVO>>> getReplyListWithPaging(
 			@PathVariable ("originalId") String originalId, 

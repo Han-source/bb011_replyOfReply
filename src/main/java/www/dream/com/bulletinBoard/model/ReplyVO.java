@@ -1,7 +1,9 @@
 package www.dream.com.bulletinBoard.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +32,7 @@ public class ReplyVO extends CommonMngVO {
 	
 	
 	
-	private int replyCnt;
+	private int replyCnt = 0;
 	
 	@HashTarget 
 	private Party writer; //작성자
@@ -59,5 +61,29 @@ public class ReplyVO extends CommonMngVO {
 		return "ReplyVO [id=" + id + ", content=" + content+ ", writer=" + writer 
 				+  ToStringSuperHelp.trimSuperString(super.toString()) + "]";
 	}
+
+	/**
+	 * Query를 통하여 정보를 읽을 때는 목록으로만 가능.
+	 * 
+	 * @param listFromDB
+	 * @return
+	 */
+	//1번째 버전
+	public static List<ReplyVO> buildCompositeHierarchy(List<ReplyVO> listFromDB) {
+		List<ReplyVO> ret = new ArrayList<>();
+		
+		Map<String, ReplyVO> map = new HashMap<>();
+		for(ReplyVO reply : listFromDB) {
+			if (reply.getDepth() == 3)
+				ret.add(reply);
+			map.put(reply.getId(), reply);
+			if(map.containsKey(reply.getOriginalId())) {
+				map.get(reply.getOriginalId()).getListReply().add(reply);
+			}
+		}
+		return ret;
+	}
+	
+	
 	
 }
