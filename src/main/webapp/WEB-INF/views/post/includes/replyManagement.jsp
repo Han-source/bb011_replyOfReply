@@ -113,11 +113,13 @@
 	var btnModifyReply = $("#btnModifyReply");
 	var btnRemoveReply = $("#btnRemoveReply");
 
-	
+	// var ulReply = $("#ulReply");
 	//댓글에서 대댓글 전체 조회
 	ulReply.on("click", "li i", function(e) {
 		e.preventDefault();
+		//this 위에 붙어있는 li 부분.
 		var clickedLi = $(this).closest("li");
+		//댓글id
 		var reply_id = clickedLi.data("reply_id");
 		
 	replyService.getReplyListOfReply(
@@ -141,6 +143,7 @@
 	/** 반복문을 사용할 경우 ul전에 depth를 +1 해준다. */
 	function printReplyOfReplyByRecursion(listReplyWithHierahcy, wrapWithUl) {
 		var strRet = "";
+		//두번쨰 파라미터가 true 인경우 호출
 		if (wrapWithUl) {
 			strRet = "<ul>";
 		}
@@ -182,7 +185,13 @@
 		modalReply.data("original_id", clickedLi.data("reply_id"));
 
 		//추가 버튼을 누른 대대댓이 포함된 댓글
-		modalReply.data("display_target", clickedLi.parents("#ulReply li").last());
+		var grandFather = clickedLi.parents("#ulReply li").last();
+		if(grandFather.length == 0) {
+			modalReply.data("display_target", clickedLi);
+			
+		}else {
+			modalReply.data("display_target", grandFather);
+		}
 		
  		showModalForCreate();
 	});
@@ -245,7 +254,7 @@
 		replyService.addReply(
 			modalReply.data("original_id"),
 			reply,
-			function(newReplyId) {
+			function(resObj){	
 				modalReply.find("input").val("");   //모달 내부에 있는 모든 input 요소의 값을 빈 값으로 채움.
 				modalReply.modal("hide"); 
 				displayUpdatedContents(1);
@@ -290,15 +299,16 @@
 			 }
 		);
 	});
-
+    
 	/** 수정, 삭제 조회 시에 그 창을 그대로 유지해 줄 것인지 아니면 처음 화면으로 보여줄 것인지를 결정해주는 함수 */
 	function displayUpdatedContents(targetPage) {
 	displayTargetLi = modalReply.data("display_target");
 	//댓글 추가한 경우와 대댓글 추가한 경우로 나누어 반응 시켜야 한다.
 	// 등록 성공 시 목록을 다시 보여준다.
 	if (displayTargetLi == null){
-		showReplyList(targetPage);
+		showReplyList(targetPage);	
 	} else {
+		//modalReply.data("display_target", clickedLi.parents("#ulReply li").last());
 		//댓글 id확보
 		var reply_id = $(displayTargetLi).data("reply_id");
 		
@@ -317,7 +327,8 @@
 			  }, function(errMsg){
 				  alert("댓글 조회 오류 : " +errMsg);
 			  }		
-			);		
+			);
+			//댓글에 댓글이 몇개 달려있는지 count
 			replyService.getAllReplyCountOfReply(
 				reply_id,
 				//listReplyWithHierahcy : 댓글들이 담겨있는 계층 구조
@@ -325,11 +336,11 @@
 					var iTagForCntDisplay = $(displayTargetLi).find("i");
 					var strongTagForCntDisplay = $(displayTargetLi).find("strong");
 					if (cnt == 0) {
-						if (iTagForCntDisplay != null) {
+						if (iTagForCntDisplay.length != 0) {
 							$(iTagForCntDisplay).remove();
 						}
 					} else {
-						if (iTagForCntDisplay == null) {
+						if (iTagForCntDisplay.length == 0) {
 							strongTagForCntDisplay.before("<i>[" + cnt + "]</i>");							
 						} else {
 							iTagForCntDisplay.html("[" + cnt + "]");

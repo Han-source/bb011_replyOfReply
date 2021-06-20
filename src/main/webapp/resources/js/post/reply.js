@@ -27,7 +27,7 @@ var replyService = (function() {
 			}
 		);	
 	}
-
+	// 특정게시판에 달린 모든 댓글들
 	function getList(orgIdAndPage, successCallBack, errorCallBack) {
 		//https://api.jquery.com/jquery.getjson/
 		var page = orgIdAndPage.page || 1;
@@ -48,7 +48,7 @@ var replyService = (function() {
 		);
 	}
 	
-	
+	// 특정 댓글의 댓글들 출력
 	function getListOfReply(replyId, successCallBack, errorCallBack) {
 		$.getJSON(
 			"/replies/pages/" + replyId,
